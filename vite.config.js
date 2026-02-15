@@ -4,6 +4,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   // 빌드 결과물이 나올 폴더 지정 (기존처럼 theme로 하고 싶다면)
+  base: '/vitetest/',
   build: {
     outDir: 'theme',
   },

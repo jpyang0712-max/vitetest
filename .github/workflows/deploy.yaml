@@ -1,0 +1,33 @@
+name: Deploy to Cloudflare Workers (Vite Version)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm' # 빌드 속도를 대롱파로롱하게 높여주는 캐시 설정
+
+      - name: Install Dependencies
+        run: npm install # Vite와 플러그인들을 설치합니다.
+
+      - name: Build
+        run: npm run build # Vite가 src를 읽어서 theme 폴더를 생성합니다.
+
+      - name: Deploy
+        # --assets=./theme는 Vite의 outDir 설정과 일치해야 합니다.
+        run: npx wrangler deploy --assets=./theme --compatibility-date=2026-02-14 --name medic-bootstrap
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
